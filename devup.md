@@ -167,6 +167,8 @@ Run some static analysis during CICD as well
 
 http://www.wechall.net/  - Registry of hack-the-box style sites and CTFs
 
+https://www.pluralsight.com/authors/troy-hunt - Troy hunt's courses on pluralsight (ETH, Techniques, etc)
+
 ## REST Microservices with Azure Functions
 
 ### Representational State Transfer:
@@ -259,3 +261,58 @@ Azure Event Hubs - a managed, real time ingestion service. Simple, trusted, scal
 - docs: https://docs.microsoft.com/en-us/azure/event-hubs/
 - Built on OSS services (Kafka, AMPQ, https)
 - Charged by 'Throughput Units' (ingress & egress). Can enable auto scale-up, but need to implement scale-down through monitoring or something
+
+## How to succeed at application security without even trying
+
+- AppSec focuses on securing Application
+- DevSec focuses on securing  Developer Actions
+- DevSecOps focuses on securing Build chain
+
+Security is a responsibility for dev teams. There are many ways to facillitate this.
+Introducing the infosec color wheel: https://hackernoon.com/introducing-the-infosec-colour-wheel-blending-developers-with-red-and-blue-security-teams-6437c1a07700
+
+Do threat modeling for your service on a regular basis. Answer
+- Actors & Motivations
+- What are we working on?
+    - Services, data movement, boundaries, auth scope
+- What can go wrong?
+- What do we do about it?
+- Is that good enough?
+- What happens if X happens Y
+- Security theatre - Imagine some crazy shit happens that changes how our services are used
+
+
+Good logging is essential for catching security incidents. You should also audit/monitor those logs, looking for security-impactful events
+
+A significant, rising amount of breaches over the last few years have installed ransomware. Have 3 backups of data, with immutable and an offline copy. Test Recovery
+
+Practice Defense in depth:
+- Implement MFA - passwords are terrible, test for weak ones, can block known word lists. Use a 3rd part auth provider
+- Use Canaries - Fake user accounts, fake entries in robots.txt, and monitor for activity on these resources
+- Use analytics to block suspicious activity (location, time, etc)
+- Endpoint Detection & Response
+- Static Analysis. Start doing this from day 1 if possible
+- Dynamic Application Security Testing - Automate Common Vulnerabilities & Fuzzing w/ ZAP proxy in CICD before promotion
+
+Interactive and Real-Time Application Security Tests/Protection exist, ML/AI to block unusual requests at runtime
+
+Testing APIs can be hard, because the test is often separated from the backing logic.
+For API security, watch for
+- Which APIs serve sensitive information
+- Understand which endpoints serve which info, and watch for utilization spikes
+- Always control who can access. If anonymous access is allowed, explicitly mark those endpoints as such (add decorates on the handlers)
+
+Unit Tests are important, because they allow you to upgrade libraries w/o fearing your code silently breaking. Write tests, you fool!
+
+Pentesting is good, but doesn't need to be prioritized before implementing mitigations. If mgmt pushes for one, you can tell them
+- Can't sit on the results (must fix). Customers may ask for the report
+- retest can be expensive. but good pentesters will include this in the initial fee, and may even give scripts to repeat the exploit
+- Some people don't give good insights, just tool output. It might not even be valid!
+- Some groups outsource their pentesters to whoever
+- Can do your own pentests! Red teaming in-house. Red Team vs Blue team games are fun and productive
+
+Involve Development when selecting Vendors. Walk through user stories and get dev feedback on the implementation.
+- Have multiple competitors and be willing to walk away.
+- If you need to drop a vendor, do so incrementally (cut licenses in half)
+
+Write and Publish post mortems for security events, just like reliability incidents
