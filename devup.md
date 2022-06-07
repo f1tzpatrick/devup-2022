@@ -197,6 +197,7 @@ Organize function apps for performance & scaleability. Don't want to spin up unr
 
 Q: Is 'CareType' an App, with a function for each HTTP method? Or were multiple APIs hosted by a more encompassing app
 
+Each HTTP handler implemented as a separate function.
 
 #### Gotchas:
 Testing challenges:
@@ -237,3 +238,24 @@ Cheap is Expensive. Countries trusted FAA. FAA trusted Boeing. Boeing outsourced
 
 ## Event driven Microservices
 
+Producers, Ingestion (storage), Consumers
+- Producers and Consumers don't need to know about each other
+
+Allows decoupling & encapsulation of functionality
+
+When to use
+- Multiple subsystems
+- Real Time processing
+- Complex event handling
+- High Volume applications
+
+Drawbacks:
+- Learning Curve
+- Increased complexity (More infra)
+- Loss of transactionality (Non-sequential - Eventually consistent)
+- No *guarantee* that consumers will receive all events
+
+Azure Event Hubs - a managed, real time ingestion service. Simple, trusted, scaleable
+- docs: https://docs.microsoft.com/en-us/azure/event-hubs/
+- Built on OSS services (Kafka, AMPQ, https)
+- Charged by 'Throughput Units' (ingress & egress). Can enable auto scale-up, but need to implement scale-down through monitoring or something
