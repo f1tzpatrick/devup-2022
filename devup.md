@@ -494,4 +494,23 @@ Pro Tips:
 - There is a `az bicep decompile --file my-arm.json` command which might help ^
 - Incorporate bicep into pipelines!
 
+## CLI goodness
+
+https://twitter.com/ryapric
+
+There's a shellcheck extension for vscode
+
+Use `wait` after backgrounding a task
+- wait %job_num
+
+`seq 1 5` evaluates to 1 2 3 4 5. Good for loops
+
+xargs - not just for doing multiple things at once! Use `-I` to interpolate stdin into an arbitrary place of the command
+    `echo "foo" | xargs -I{} curl -H 'My-Thing: {}' google.com`.
+With xargs, you don't need to use {}'s as your interpolation character. For instance `-I::`.
+Be careful with xargs for parallelization - It is particular about it's inputs with how it schedules
+
+Use the `parallel` command instead of xargs! `parallel -j1 python foo.py :::: logfiles.txt` (the colons is a parallel syntax for 'take each line of this file and pass it as input to a job). It also takes a -S flag, which allows you to pass SSH configs, to run commands on multiple different computers at once.
+
+awk programs can be split across multiple lines 🤯
 
