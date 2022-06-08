@@ -348,3 +348,42 @@ Documenting your library
 - Group situationally related components in your documentation
 - Maintain good release notes (links to PRs, semVer, categorization). Semantic versioning is particularly valuable for reusable component libraries, to add clarity for devs when they upgrade the library in their projects
 - 
+
+## Azure API Management w/ Functions
+
+Demo repo: https://github.com/blgorman/DevUp_APIMDemoFunctionApp
+Other repo from yesterday: https://github.com/blgorman/ServerlessMessagingDemystified
+docs: https://docs.microsoft.com/en-us/azure/api-management/
+
+APIM services allow a 'front door' to other API services. You can assign it a DNS name, and it manages authentication. You define API routes in your APIM service, which map to external API endpoints. ex: my-apim.azure.io/foo -> my-service.com/api/v1/foo
+
+note: Need to have a Log analytics and App Insight to create an APIM service
+
+APIM endpoints can have inbound and outbound policies, to filter or modify requests
+- inbound policies apply to requests to the APIM
+- backend policies apply to requests from the APIM to other APIs
+- outbound policies apply to responses from the APIM
+https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-policies
+https://docs.microsoft.com/en-us/azure/api-management/api-management-policies
+
+APIM endpoints are grouped into "Products"
+Subscription Keys are given to Customers and can be used to gate access to Products, monitor utilization, rate limit, etc
+
+
+APIM tiers:
+- consumption based, cheapest but w/ least admin capability
+- developer based 
+- standard and higher have throtteling, scale-ability, private networking, etc
+
+
+How to auth
+- Create "Subscription Key"s for your API products in APIM
+- Configure the backend API to use Authentication (ie, Add Identity Provider authentication setting to your Function App)
+- Configure the APIM service to authenicate with the backend API (ie, Give APIM an AAD Manged Identity and give that Identity Permission to hit the App)
+
+
+https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-protect-backend-with-aad
+https://docs.microsoft.com/en-us/azure/api-management/mitigate-owasp-api-threats
+
+
+
