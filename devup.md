@@ -262,6 +262,8 @@ Azure Event Hubs - a managed, real time ingestion service. Simple, trusted, scal
 - Built on OSS services (Kafka, AMPQ, https)
 - Charged by 'Throughput Units' (ingress & egress). Can enable auto scale-up, but need to implement scale-down through monitoring or something
 
+Make sure consumers handle messages idempotently
+
 ## How to succeed at application security without even trying
 
 - AppSec focuses on securing Application
@@ -375,15 +377,57 @@ APIM tiers:
 - developer based 
 - standard and higher have throtteling, scale-ability, private networking, etc
 
-
-How to auth
+How to auth:
 - Create "Subscription Key"s for your API products in APIM
 - Configure the backend API to use Authentication (ie, Add Identity Provider authentication setting to your Function App)
 - Configure the APIM service to authenicate with the backend API (ie, Give APIM an AAD Manged Identity and give that Identity Permission to hit the App)
-
 
 https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-protect-backend-with-aad
 https://docs.microsoft.com/en-us/azure/api-management/mitigate-owasp-api-threats
 
 
+## Distributed Systems Fail
 
+Failures is _always_ an option with Distributed Systems. (_RABBITMQ!!!!_)
+Your coffee shop doesn't use two-phase commit: https://ieeexplore.ieee.org/document/1407829
+
+Imagine this scenario: Customer hits submit on checkout page...
+- Get customer ID from DB
+- Build Order object from Cart & Customer ID
+- Call payment API
+- Send Order downstream (packaging, shipping, fulfillment)
+- Send thankyou email
+- Commit order to DB
+
+Strategies for handling failures:
+- Ignore (not great, not terrible 😅)
+- Retry (Good if idempotent options are available)
+- Undo (Can be complex to do this logic)
+- Coordination
+    - Add extra logic to monitor state
+    - do critical actions once other state is successful
+
+At a some point, we should realize that there is too much going on in the context of a single button click. Instead the button click should kick off some background process. Different ideas can be found in the ["Enterprise Integration Patterns" book ](https://www.enterpriseintegrationpatterns.com/)
+
+Routing-Slip process
+- Clicking the button adds a task to an "outbox" queue. Checkout Complete
+- Cronjob processes outbox regularly
+- Task "routes" between various backend steps (payment, sendgrid, rabbit)
+- Each step marks the Tasks's routing slip as completed
+- WHen routing slip is complete the task is done
+
+Saga pattern
+- Requires knowing how to undo each step
+- Do each step sequentially
+- If one failes, go backwards, undoing each previous step
+
+Process Manager patterns
+- Process Manager taks task from outbox
+- Coordinates w/ each step
+- Orchestration (command based, process coupling) or Choreography (event based, decoupled processes)
+
+Process Manager example:
+- Process manager gets order from outbox
+- Process manager first issues stripe command (Orchestration)
+- Upon success Process manager triggers email & fulfillment services (Choreography)
+- Commit completed task to DB
