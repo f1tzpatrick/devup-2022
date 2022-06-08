@@ -431,3 +431,67 @@ Process Manager example:
 - Process manager first issues stripe command (Orchestration)
 - Upon success Process manager triggers email & fulfillment services (Choreography)
 - Commit completed task to DB
+
+## Pump up your cloud infrastructure with Azure Bicep
+
+https://github.com/DustinEwers/bicep-demos
+https://docs.microsoft.com/EN-US/azure/azure-resource-manager/bicep/
+https://github.com/azure/bicep
+
+Infrastructure as Code!
+- Speed & Automation
+- Consistency & Repeatability
+- Version Control
+
+Procedural IaC - "Recipes" ie Script with CLIs ie "Here is what to do"
+
+Declarative IaC - Manifests ie "Here is what I want"
+
+ARM sucks - Verbose, Lots of JSON, tough to learn
+
+Bicep Templates are a 1P alternative to ARM Templates which support 100% of Azure APIs
+ARM resource properies are 1:1 with resource properties in Bicep
+Bicep templates are applied the same way an ARM template would be (az create ... --template=foo.bicep)
+
+ex:
+```
+var serviceName = myAppService-${region}
+
+resource serverfarms_AppService 'Microsoft.Web/serverfarms@2020-09-01' = {
+  name: serviceName
+  location: location
+  sku: {
+    name: appSkuName
+    tier: appSkuTier
+  }
+  kind: 'linux'
+  properties: {
+    isSpot: false
+    reserved: true
+    hyperV: false
+  }
+}
+
+```
+
+- Install the bicep cli extension: `az bicep install`
+- There is a VS Code Bicep Extension
+- Can do enums with @allowed = {foo, bar}
+- Can do string interpolation with ${var}-thing
+- Dependencies with dependsOn: [resource1, resource2]
+- builtin functions: uniqueString(), toLower(), resourceId(), Contains()
+- The @secure() decorator will ensure that a variable is not logged
+- KeyVault & Bicep: https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/key-vault-parameter?tabs=azure-cli
+- Note: Removing something from Bicep and re-applying won't result in the resource being deleted, unless you use a 'complete' deployment strategy
+
+You can organize templates into modules. Modules can output variables to be used in the outer template. 
+You can setup a Registry of bicep modules and reference them in other places https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/private-module-registry?tabs=azure-powershell
+
+Pro Tips:
+- Reference with quickstart templates https://azure.microsoft.com/en-us/resources/templates/
+- Cheat by exporting ARM templates from portal for the resources you want
+    - And then modify the ARM template by isolating variables & translating to bicep
+- There is a `az bicep decompile --file my-arm.json` command which might help ^
+- Incorporate bicep into pipelines!
+
+
