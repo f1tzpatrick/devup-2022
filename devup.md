@@ -36,7 +36,7 @@ Start with a ' to juke the existing query syntax
 End with a comment (`-- ` or `#`) to skip the end of the exsiting query (to resolve syntax errors after injection)
 
 - List all Users. The or 1=1 makes the exsting query "always true"
-    
+
     `' or 1=1 # `
 
 Use `union select` to pivot into other queries
@@ -64,7 +64,7 @@ Use functions:
 
     `' or 1=1 union select null, user() #`
 
-Use other queries. 
+Use other queries.
 
 - List database tables
 
@@ -84,7 +84,7 @@ Use other queries.
 
     `' union select user_id, password from users #`
 
-- Delete a table    
+- Delete a table
 
     '; drop table guestbook #
 
@@ -117,14 +117,14 @@ Mitigate with RBAC on resources.
 
 jwt.io - Web UI for decoding Javascript Web Tokens
 
-JWT's consist of 3 b64 blobs separated by '.' The first blob is a header, describing the type of token and hash algorithm to use for verification. Second is the paylod data (json). Third is a verification blob formatted as 
+JWT's consist of 3 b64 blobs separated by '.' The first blob is a header, describing the type of token and hash algorithm to use for verification. Second is the paylod data (json). Third is a verification blob formatted as
 
     HMACSHA256(
         base64UrlEncode(header) + "." +
         base64UrlEncode(payload), +
         your salt
     )
-  
+
 JWTs are commonly used as "Session Tokens", which describe the session (lol) - ie, user, browser data, time, expiry time, etc.
 
 "authentication tokens" which describe the user, their permissions, issue and expiry time
@@ -160,7 +160,7 @@ Design apps with security in mind. "Bolting On" security after the fact is error
 Do threat modeling early, and revisit this exercise regularly. (Actors & Motivations)
 Document the locations of all sensitive infomation in your application
 
-Produce audit logs 
+Produce audit logs
 
 Audit your dependencies (Vet them, Updates, etc). Regular minor version updates are much easier to deal with than infrequent large updates. Can do this during CICD
 Run some static analysis during CICD as well
@@ -179,7 +179,7 @@ GET POST(create) PUT(update/overwrite) PATCH(partial update) DELETE
 Status codes: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
 ### Serverless
-Azure Function 
+Azure Function
 - Docs: https://docs.microsoft.com/en-us/azure/azure-functions/
 - Durable (Stateful) Function extension: https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview
 - Github: https://github.com/Azure/Azure-Functions
@@ -218,13 +218,13 @@ Avoid cross-function communication
 
 Avoid sharing storage accounts (code for functions live in a SA. Separate Apps should use separate SA's)
 
-Avoid blocking calls & use Async 
+Avoid blocking calls & use Async
 
 ## Lessons learned from the 737 Max
 
-At takeoff: Redundent instruments read different measurements: Speed and AOA. Within 1min of takeoff the speed and altitude measurements were noticeably off 
+At takeoff: Redundent instruments read different measurements: Speed and AOA. Within 1min of takeoff the speed and altitude measurements were noticeably off
 
-Double and triple check assumptions. Hire SMEs. Get as close to the problem as possibl 
+Double and triple check assumptions. Hire SMEs. Get as close to the problem as possibl
 
 Fail safe instead of Fail-proof
 
@@ -332,14 +332,14 @@ Reusable components allow for
 - less code
 - reliable implementations
 - faster development
-- improved accessibility 
+- improved accessibility
 
 They're tricky to plan for, and you should dedicate someone on your team full time to their construction. Another good idea is to rotate these maintainers into development teams so that they 'dogfood' their re-usable components. This feedback will help to continually improve the library
 
-When planning a reusable component, decide on 
+When planning a reusable component, decide on
 - the audience for your library
 - rigid or flexible use case
-- atomic design (built from well defined, single purpose pieces). ex, a Button is an 'atom' - a signup form is a 'molecule', made from other atomic components. 
+- atomic design (built from well defined, single purpose pieces). ex, a Button is an 'atom' - a signup form is a 'molecule', made from other atomic components.
 - Will you Link, wrap, or Fork external libraries?
 - Open or Inner Source?
 
@@ -349,7 +349,7 @@ Documenting your library
 - Have demos of the component, w/ code & import examples. This will help people see how to compose different components into useful constructs. Detail the available props the component supports (Can generate these docs from docstrings - https://github.com/reactjs/react-docgen)
 - Group situationally related components in your documentation
 - Maintain good release notes (links to PRs, semVer, categorization). Semantic versioning is particularly valuable for reusable component libraries, to add clarity for devs when they upgrade the library in their projects
-- 
+-
 
 ## Azure API Management w/ Functions
 
@@ -358,8 +358,6 @@ Other repo from yesterday: https://github.com/blgorman/ServerlessMessagingDemyst
 docs: https://docs.microsoft.com/en-us/azure/api-management/
 
 APIM services allow a 'front door' to other API services. You can assign it a DNS name, and it manages authentication. You define API routes in your APIM service, which map to external API endpoints. ex: my-apim.azure.io/foo -> my-service.com/api/v1/foo
-
-note: Need to have a Log analytics and App Insight to create an APIM service
 
 APIM endpoints can have inbound and outbound policies, to filter or modify requests
 - inbound policies apply to requests to the APIM
@@ -373,9 +371,9 @@ Subscription Keys are given to Customers and can be used to gate access to Produ
 
 
 APIM tiers:
-- consumption based, cheapest but w/ least admin capability
-- developer based 
-- standard and higher have throtteling, scale-ability, private networking, etc
+- consumption based - Has an SLA, no cap, $0.035 / 10k requests
+- developer based - No SLA, All features, 500r/s, $50/month
+- standard and higher have an SLA, All features, higher caps and higher prices
 
 How to auth:
 - Create "Subscription Key"s for your API products in APIM
@@ -484,7 +482,7 @@ resource serverfarms_AppService 'Microsoft.Web/serverfarms@2020-09-01' = {
 - KeyVault & Bicep: https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/key-vault-parameter?tabs=azure-cli
 - Note: Removing something from Bicep and re-applying won't result in the resource being deleted, unless you use a 'complete' deployment strategy
 
-You can organize templates into modules. Modules can output variables to be used in the outer template. 
+You can organize templates into modules. Modules can output variables to be used in the outer template.
 You can setup a Registry of bicep modules and reference them in other places https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/private-module-registry?tabs=azure-powershell
 
 Pro Tips:
@@ -514,3 +512,42 @@ Use the `parallel` command instead of xargs! `parallel -j1 python foo.py :::: lo
 
 awk programs can be split across multiple lines 🤯
 
+## More on Azure APIM "The taming of the API"
+
+What is API management?
+- Creating And Publishing APIs
+- Enforcing Usage Polices
+- Controlling Access
+- Nuturing The Dev Community
+- Tracking Usage
+- Performace Reporting
+
+Benefits:
+- Data-Driven decision making
+- Security
+- Documentation
+- Centralized Visibility
+- Monetization
+- Optimize Business Value
+- Positive User Experience
+- Agile ????
+- B2B Integrations
+- Front-end Legacy Systems
+
+Components:
+- API Gateway
+- Policy Manager
+- Developer Portal
+- Reporting & Analytics
+- Lifecycle Management
+- Money Machine (Monetization System)
+
+Azure APIM
+- Multiple tiers w/ different restrictions
+- Running AppInsights for the APIM can hurt performance, recommend to not run unless you're having issues?
+- Managed Identity to integrate APIM w/ other Azure services
+- APIM takes a while to create (~1hr)
+- Scaleable in "Scale Units". Each unit increases max throughput by 1x the advertised rate
+- HTTP and Websocket APIs supported
+- Can register backend APIs in APIM w/ OpenAPI spec json, manually, or templates
+- Always Up-to-Date Developer Portal w/ API docs comes with Azure APIM. Docs for this: https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-developer-portal
