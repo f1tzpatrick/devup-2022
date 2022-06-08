@@ -316,3 +316,35 @@ Involve Development when selecting Vendors. Walk through user stories and get de
 - If you need to drop a vendor, do so incrementally (cut licenses in half)
 
 Write and Publish post mortems for security events, just like reliability incidents
+
+## Building reusable components that are actually reusable
+
+Library of generic component elements meant to be useable in multiple projects and contexts
+
+https://www.pluralsight.com/authors/cory-house
+
+http://storybook.js.org Storybook is an open source tool for building UI components and pages in isolation
+
+Reusable components allow for
+- consistency
+- less code
+- reliable implementations
+- faster development
+- improved accessibility 
+
+They're tricky to plan for, and you should dedicate someone on your team full time to their construction. Another good idea is to rotate these maintainers into development teams so that they 'dogfood' their re-usable components. This feedback will help to continually improve the library
+
+When planning a reusable component, decide on 
+- the audience for your library
+- rigid or flexible use case
+- atomic design (built from well defined, single purpose pieces). ex, a Button is an 'atom' - a signup form is a 'molecule', made from other atomic components. 
+- Will you Link, wrap, or Fork external libraries?
+- Open or Inner Source?
+
+
+Documenting your library
+- How should devs or designers use these? Have a doc section for each audience
+- Have demos of the component, w/ code & import examples. This will help people see how to compose different components into useful constructs. Detail the available props the component supports (Can generate these docs from docstrings - https://github.com/reactjs/react-docgen)
+- Group situationally related components in your documentation
+- Maintain good release notes (links to PRs, semVer, categorization). Semantic versioning is particularly valuable for reusable component libraries, to add clarity for devs when they upgrade the library in their projects
+- 
